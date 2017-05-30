@@ -71,7 +71,7 @@ def main(argv):
 
     if csvFile != "":
         print 'Csv input file is: ', csvFile
-        metadataByCsv(csvFile, targetDir)
+        #metadataByCsv(csvFile, targetDir)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
