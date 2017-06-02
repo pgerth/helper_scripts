@@ -51,18 +51,18 @@ def metadataByCsv(file, targetDir):
 
         metadataToFile(result, targetDir)
 
-def createFileDict(targetDir):
-
-    fileDict = {}
+def createFileDict(targetDir, fileType):
 
     for root, dirs, files in os.walk(targetDir, topdown=False):
         for name in files:
-            print(name + ': ' + os.path.join(root, name))
+            if fileType in name:  
+                print(name + ': ' + os.path.join(root, name))
 
 def main(argv):
     csvFile = ''
     targetDir = ''
     fileType = ''
+    fileDict = {}
 
     try:
         opts, args = getopt.getopt(argv,"hc:d:t:",["csvfile=","targetdirectory=","filetype="])
@@ -83,7 +83,7 @@ def main(argv):
 
     if csvFile != "":
         print 'Csv input file is: ', csvFile
-        createFileDict(targetDir)
+        createFileDict(targetDir, fileType)
         #metadataByCsv(csvFile, targetDir)
 
 if __name__ == "__main__":
