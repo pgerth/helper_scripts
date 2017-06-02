@@ -21,6 +21,7 @@ import mapping
 import libxmp
 import sys, getopt
 import csv
+import os
 from libxmp.consts import XMP_NS_DC as dc
 from libxmp.consts import XMP_NS_Photoshop as photoshop
 from libxmp.consts import XMP_NS_IPTCCore as Iptc4xmpCore
@@ -50,27 +51,39 @@ def metadataByCsv(file, targetDir):
 
         metadataToFile(result, targetDir)
 
+def createFileDict(targetDir):
+
+    fileDict = {}
+
+    for root, dirs, files in os.walk(targetDir, topdown=False):
+        for name in files:
+            print(name + ': ' + os.path.join(root, name))
+
 def main(argv):
     csvFile = ''
     targetDir = ''
+    fileType = ''
 
     try:
-        opts, args = getopt.getopt(argv,"hc:t:",["csvfile=","targetdirectory="])
+        opts, args = getopt.getopt(argv,"hc:d:t:",["csvfile=","targetdirectory=","filetype="])
     except getopt.GetoptError:
-        print 'csv2xmp.py -c <csvfile> [-t <targetdirectory>]'
+        print 'csv2xmp.py -c <csvfile> -d <targetdirectory> [-t <filetype>]'
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
-            print 'csv2xmp.py -c <csvfile> [-t <targetdirectory>]'
+            print 'csv2xmp.py -c <csvfile> -d <targetdirectory> [-t <filetype>]'
             sys.exit()
         elif opt in ("-c", "--csvfile"):
             csvFile = arg
-        elif opt in ("-t", "--targetdirectory"):
+        elif opt in ("-d", "--targetdirectory"):
             targetDir = arg
+        elif opt in ("-t", "--filetype"):
+            fileType = arg
 
     if csvFile != "":
         print 'Csv input file is: ', csvFile
+        createFileDict(targetDir)
         #metadataByCsv(csvFile, targetDir)
 
 if __name__ == "__main__":
