@@ -7,11 +7,17 @@
 find . -name "D-DAI*" | while read fname; do
   directory=$(echo $fname | cut -d"-" -f 6)
   type=$(echo $fname | cut -d"-" -f 5)
-  directory="${directory//K/Kasten }"
+  if [ ${directory:0:1} = "K" ]; then
+    directory="${directory//K/Kasten }"
+  elif [ ${directory:0:1} = "M" ]; then
+    directory="${directory//M/Mappe }"
+  fi
   if [ $type = "f" ]; then
-    subdir="Foto"
+    subdir="Fotos"
   elif [ $type = "z" ]; then
-    subdir="Zeichnung"
+    subdir="Zeichnungen"
+  elif [ $type = "do" ]; then
+    subdir="Dokumente"
   fi
   # check if directory exists, if not create it
   [ -d "$directory" ] || mkdir "$directory"
