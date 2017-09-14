@@ -13,7 +13,6 @@ find . -name "D-DAI*" | while read fname; do
   elif [ $type = "z" ]; then
     subdir="Zeichnung"
   fi
-  echo "$directory/$subdir"
   # check if directory exists, if not create it
   [ -d "$directory" ] || mkdir "$directory"
   [ -d "$directory/$subdir" ] || mkdir "$directory/$subdir"
