@@ -4,11 +4,12 @@
 # e.g. file: "D-DAI-HP-K12-z-001.jpg"
 # moves the file into "./Kasten 12/Zeichnung/"
 
-find . -name "D-DAI*" | while read fname; do
+find . -name "D-DAI*" | while read fpath; do
+  fname=`basename "$fpath"`
   echo $fname
-  directory=$(echo $fname | cut -d"-" -f 7)
+  directory=$(echo $fname | cut -d"-" -f 6)
   echo $directory
-  type=$(echo $fname | cut -d"-" -f 6)
+  type=$(echo $fname | cut -d"-" -f 5)
   echo $type
   if [ ${directory:0:1} = "K" ]; then
     directory="${directory//K/Kasten }"
@@ -27,5 +28,5 @@ find . -name "D-DAI*" | while read fname; do
   # check if directory exists, if not create it
   [ -d "$directory" ] || mkdir "$directory"
   [ -d "$directory/$subdir" ] || mkdir "$directory/$subdir"
-  mv $fname "$directory/$subdir"
+  mv $fpath "$directory/$subdir"
 done
