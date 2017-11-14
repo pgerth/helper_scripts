@@ -2,16 +2,27 @@ import json
 import requests
 import csv
 
+gazList=[]
+
 def getGazById(gazId):
     r = requests.get('https://gazetteer.dainst.org/place/' + str(gazId) + '.json')
     data = r.json()
+    gazIdXY = [gazId]
     try:
-        print(data['prefLocation']['coordinates'])
-    except KeyError as e:
-        print(e)
+        gazIdXY.extend(data['prefLocation']['coordinates'])
+        gazList.append(gazIdXY)
+    except KeyError:
+        return
     return
 
 with open('places.csv', 'rt') as csvfile:
     reader = csv.reader(csvfile)
     for row in reader:
-        getGazById(row[0])
+        if row is not None:
+            print(row)
+            getGazById(row[0])
+
+with open('gazList.csv', 'wt') as exportFile:
+    wr = csv.writer(exportFile)
+    for row in gazList:
+        wr.writerow(row)
