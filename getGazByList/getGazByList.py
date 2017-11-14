@@ -1,3 +1,6 @@
+# small helper script to extract gazetteer information for a given
+# list of gaz ids
+
 import json
 import requests
 import csv
