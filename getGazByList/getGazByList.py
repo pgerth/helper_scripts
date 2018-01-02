@@ -8,10 +8,16 @@ import csv
 
 inputFile=""
 gazColumn=""
+csvDelim=";"
 
 def getGazById(gazId):
-    r = requests.get('https://gazetteer.dainst.org/place/' + str(gazId) + '.json')
-    data = r.json()
+    try:
+        r = requests.get('https://gazetteer.dainst.org/place/' + str(gazId) + '.json')
+        data = r.json()
+    except json.decoder.JSONDecodeError:
+        print("Gazetteer entry missing for: " + gazId + ". Perhaps wrong Id?")
+        return
+
     try:
         return data['prefLocation']['coordinates']
     except KeyError:
@@ -20,13 +26,13 @@ def getGazById(gazId):
 def openFile():
     print(inputFile)
     iFile = open(inputFile, 'rt')
-    reader = csv.reader(iFile)
+    reader = csv.reader(iFile, delimiter=csvDelim)
 
     oFile = open('output.csv', 'wt')
-    writer = csv.writer(oFile)
+    writer = csv.writer(oFile, delimiter=csvDelim)
 
     for row in reader:
-        if row is not None:
+        if row[int(gazColumn)] is not "" or None:
             print("----")
             print(row[int(gazColumn)])
             gazCoords = getGazById(row[int(gazColumn)])
@@ -38,21 +44,24 @@ def openFile():
 def main(argv):
     global inputFile
     global gazColumn
+    global csvDelim
 
     try:
-        opts, args = getopt.getopt(argv,"hi:c:",["input=","column="])
+        opts, args = getopt.getopt(argv,"hi:c:d:",["input=","column=","delimiter="])
     except getopt.GetoptError:
         print('getGazByList.py -i <inputFile>')
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
-            print('csv2xmp.py -i <inputFile>')
+            print('csv2xmp.py -i <input+> -c <column> [-d <delimiter>]')
             sys.exit()
         elif opt in ("-i", "--input"):
             inputFile = arg
         elif opt in ("-c", "--column"):
             gazColumn = arg
+        elif opt in ("-d", "--delimiter"):
+            csvDelim = arg
 
     if inputFile != "":
         print('Csv input file is: ', inputFile)
