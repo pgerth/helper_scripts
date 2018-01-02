@@ -7,6 +7,7 @@ import requests
 import csv
 
 inputFile=""
+gazColumn=""
 
 def getGazById(gazId):
     r = requests.get('https://gazetteer.dainst.org/place/' + str(gazId) + '.json')
@@ -27,23 +28,19 @@ def openFile():
     for row in reader:
         if row is not None:
             print("----")
-            print(row[0])
-            gazCoords = getGazById(row[0])
+            print(row[int(gazColumn)])
+            gazCoords = getGazById(row[int(gazColumn)])
             if gazCoords is not None:
                 row.append(gazCoords[0])
                 row.append(gazCoords[1])
                 writer.writerow(row)
 
-    # with open('gazList.csv', 'wt') as exportFile:
-    #     wr = csv.writer(exportFile)
-    #     for row in gazList:
-    #         wr.writerow(row)
-
 def main(argv):
     global inputFile
+    global gazColumn
 
     try:
-        opts, args = getopt.getopt(argv,"hi:",["inputFile="])
+        opts, args = getopt.getopt(argv,"hi:c:",["input=","column="])
     except getopt.GetoptError:
         print('getGazByList.py -i <inputFile>')
         sys.exit(2)
@@ -52,8 +49,10 @@ def main(argv):
         if opt == '-h':
             print('csv2xmp.py -i <inputFile>')
             sys.exit()
-        elif opt in ("-i", "--inputFile"):
+        elif opt in ("-i", "--input"):
             inputFile = arg
+        elif opt in ("-c", "--column"):
+            gazColumn = arg
 
     if inputFile != "":
         print('Csv input file is: ', inputFile)
