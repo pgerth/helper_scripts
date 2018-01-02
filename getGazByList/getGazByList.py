@@ -37,7 +37,7 @@ def getGazById(gazId):
     except KeyError:
         return
 
-def openFile():
+def createOutputFile():
     print(inputFile)
     iFile = open(inputFile, 'rt')
     reader = csv.reader(iFile, delimiter=csvDelim)
@@ -47,8 +47,6 @@ def openFile():
 
     for row in reader:
         if row[int(gazColumn)] is not "" or None:
-            print("----")
-            print(row[int(gazColumn)])
             gazCoords = getGazById(row[int(gazColumn)])
             if gazCoords is not None:
                 row.append(gazCoords[0])
@@ -79,7 +77,7 @@ def main(argv):
 
     if inputFile != "":
         print('Csv input file is: ', inputFile)
-        openFile()
+        createOutputFile()
 
 if __name__ == "__main__":
     main(sys.argv[1:])
