@@ -6,52 +6,57 @@ import json
 import requests
 import csv
 
-csvFile=""
-gazList=[]
+inputFile=""
 
 def getGazById(gazId):
     r = requests.get('https://gazetteer.dainst.org/place/' + str(gazId) + '.json')
     data = r.json()
-    gazIdXY = [gazId]
     try:
-        gazIdXY.extend(data['prefLocation']['coordinates'])
-        gazList.append(gazIdXY)
+        return data['prefLocation']['coordinates']
     except KeyError:
         return
-    return
-
 
 def openFile():
+    print(inputFile)
+    iFile = open(inputFile, 'rt')
+    reader = csv.reader(iFile)
 
-    with open('places.csv', 'rt') as csvfile:
-        reader = csv.reader(csvfile)
-        for row in reader:
-            if row is not None:
-                print(row)
-                getGazById(row[0])
+    oFile = open('output.csv', 'wt')
+    writer = csv.writer(oFile)
 
-    with open('gazList.csv', 'wt') as exportFile:
-        wr = csv.writer(exportFile)
-        for row in gazList:
-            wr.writerow(row)
+    for row in reader:
+        if row is not None:
+            print("----")
+            print(row[0])
+            gazCoords = getGazById(row[0])
+            if gazCoords is not None:
+                row.append(gazCoords[0])
+                row.append(gazCoords[1])
+                writer.writerow(row)
+
+    # with open('gazList.csv', 'wt') as exportFile:
+    #     wr = csv.writer(exportFile)
+    #     for row in gazList:
+    #         wr.writerow(row)
 
 def main(argv):
+    global inputFile
 
     try:
-        opts, args = getopt.getopt(argv,"hc:",["csvfile="])
+        opts, args = getopt.getopt(argv,"hi:",["inputFile="])
     except getopt.GetoptError:
-        print('getGazByList.py -c <csvfile>')
+        print('getGazByList.py -i <inputFile>')
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
-            print('csv2xmp.py -c <csvfile> -d <targetdirectory> [-t <filetype>]')
+            print('csv2xmp.py -i <inputFile>')
             sys.exit()
-        elif opt in ("-c", "--csvfile"):
-            csvFile = arg
+        elif opt in ("-i", "--inputFile"):
+            inputFile = arg
 
-    if csvFile != "":
-        print('Csv input file is: ', csvFile)
+    if inputFile != "":
+        print('Csv input file is: ', inputFile)
         openFile()
 
 if __name__ == "__main__":
