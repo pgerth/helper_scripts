@@ -21,6 +21,7 @@ import requests
 import csv
 
 inputFile=""
+outputFile=""
 gazColumn=""
 csvDelim=";"
 
@@ -42,7 +43,8 @@ def createOutputFile():
     iFile = open(inputFile, 'rt')
     reader = csv.reader(iFile, delimiter=csvDelim)
 
-    oFile = open('output.csv', 'wt')
+    outputFilename = inputFile.strip('.csv') + '_gaz' + '.csv'
+    oFile = open(outputFilename, 'wt')
     writer = csv.writer(oFile, delimiter=csvDelim)
 
     for row in reader:
