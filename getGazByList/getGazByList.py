@@ -63,12 +63,12 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv,"hi:c:d:",["input=","column=","delimiter="])
     except getopt.GetoptError:
-        print('getGazByList.py -i <inputFile>')
+        print('getGazByList.py -i <inputFile> -c <column> [-d <delimiter>]')
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
-            print('csv2xmp.py -i <input+> -c <column> [-d <delimiter>]')
+            print('getGazByList.py -i <input> -c <column> [-d <delimiter>]')
             sys.exit()
         elif opt in ("-i", "--input"):
             inputFile = arg
