@@ -10,6 +10,7 @@ The intention of the script is to enrich a csv with gazetteer Ids
  numbering starts with 0!
 -d --delimiter= This optional parameter is used to define the delimiter of
  the input csv file, per default ";" is used!
+-f --fileheader This parameter defines, if a file header exists. By default False.
  ```
 
 ## Examples:
