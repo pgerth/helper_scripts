@@ -13,6 +13,7 @@ The intention of the script is to enrich a csv with gazetteer Ids
  ```
 
 ## Examples:
-
+```
 python getGazByList.py -c 'relative/path/places.csv' -c 0 -d ,
 python getGazByList.py -c 'relative/path/synode.csv' -c 3
+```
