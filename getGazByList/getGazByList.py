@@ -24,6 +24,7 @@ inputFile=""
 outputFile=""
 gazColumn=""
 csvDelim=";"
+header=False
 
 def getGazById(gazId):
     try:
@@ -47,21 +48,28 @@ def createOutputFile():
     oFile = open(outputFilename, 'wt')
     writer = csv.writer(oFile, delimiter=csvDelim)
 
+    i = 0
     for row in reader:
+        if i == 0 and header:
+            row.append("x")
+            row.append("y")
+            writer.writerow(row)
         if row[int(gazColumn)] is not "" or None:
             gazCoords = getGazById(row[int(gazColumn)])
             if gazCoords is not None:
                 row.append(gazCoords[0])
                 row.append(gazCoords[1])
                 writer.writerow(row)
+        i += 1
 
 def main(argv):
     global inputFile
     global gazColumn
     global csvDelim
+    global header
 
     try:
-        opts, args = getopt.getopt(argv,"hi:c:d:",["input=","column=","delimiter="])
+        opts, args = getopt.getopt(argv,"hfi:c:d:",["input=","column=","delimiter="])
     except getopt.GetoptError:
         print('getGazByList.py -i <inputFile> -c <column> [-d <delimiter>]')
         sys.exit(2)
@@ -76,6 +84,8 @@ def main(argv):
             gazColumn = arg
         elif opt in ("-d", "--delimiter"):
             csvDelim = arg
+        elif opt in ("-f", "--fileheader"):
+            header = 1
 
     if inputFile != "":
         print('Csv input file is: ', inputFile)
