@@ -8,12 +8,13 @@
 # -c --column= This parameter hands over the column number of the gazetteer Id,
 #  numbering starts with 0!
 # -d --delimiter= This optional parameter is used to define the delimiter of
-#  the input csv file, per default ";" is used!
+#  the input csv file. By default ";" is used!
+# -f This parameter defines, if a file header exists. By default False.
 #
 # Examples:
 #
 # python getGazByList.py -c 'relative/path/places.csv' -c 0 -d ,
-# python getGazByList.py -c 'relative/path/synode.csv' -c 3
+# python getGazByList.py -c 'relative/path/synode.csv' -c 3 -f
 
 import sys, getopt
 import json
@@ -69,14 +70,14 @@ def main(argv):
     global header
 
     try:
-        opts, args = getopt.getopt(argv,"hfi:c:d:",["input=","column=","delimiter="])
+        opts, args = getopt.getopt(argv,"hfi:c:d:",["input=","column=","delimiter=","fileheader"])
     except getopt.GetoptError:
-        print('getGazByList.py -i <inputFile> -c <column> [-d <delimiter>]')
+        print('getGazByList.py -i <inputFile> -c <column> [-d <delimiter> -f <fileHeader>]')
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
-            print('getGazByList.py -i <input> -c <column> [-d <delimiter>]')
+            print('getGazByList.py -i <input> -c <column> [-d <delimiter> -f <fileHeader>]')
             sys.exit()
         elif opt in ("-i", "--input"):
             inputFile = arg
